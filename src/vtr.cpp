@@ -9,6 +9,9 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <set>
+#include <vector>
+#include <bits/stdc++.h>
 
 void leituraDeArquivoLinhaAlinha() {
 	// greet the user
@@ -40,6 +43,11 @@ void leituraGravacaoSimples() {
 int main() {
 	leituraGravacaoSimples();
 
+	std::set<std::string> setOfSelos;
+
+	std::set<std::string>::iterator it;
+	std::pair<std::set<std::string>::iterator, bool> ret;
+
 	std::string str("There are two needles in this haystack with needles.");
 	std::string str2("needle");
 	std::string tjdft("TJDFT");
@@ -50,25 +58,32 @@ int main() {
 	std::cout << "Informe o nome do arquivo a ser tratado:  ";
 	std::getline(std::cin, nomeArquivo);
 	std::ofstream os("saidaDe_" + nomeArquivo, std::ofstream::out);
-	if (os.is_open()) {
-		os << "Primeira linha ";
-	}
+
 	std::ifstream is(nomeArquivo, std::ifstream::in);
 	if (is.is_open()) {
 		std::cout << "Arquivo " << nomeArquivo << " Aberto" << '\n';
 		for (std::string line; std::getline(is, line);) {
-			std::cout << line << '\n';
 			std::size_t poselo = line.find(tjdft);
 			if (poselo != std::string::npos) {
-				std::cout << "first 'TJDFT' found at: " << poselo << '\n';
+				setOfSelos.insert(line.substr(poselo, line.npos));
 				// adicionar ao set para gravar arquivo de saida a partir do set sem repetição
-				os  << "update [SIEX].[siex].[SeloDigital] set Status = 'G' where ANO = "
-					<< line.substr(poselo, 4) << "\n";
 			}
-
 		}
 	}
 	is.close();
+	for (auto linhaSelo : setOfSelos) {
+		std::cout << linhaSelo << "\n";
+		if (os.is_open()) {
+			os
+					<< "update [SIEX].[siex].[SeloDigital] set Status = 'G' where ANO = "
+					<< linhaSelo.substr(5, 4) << "\n"
+					<< " AND CartorioExtrajudicial = " << linhaSelo.substr(9, 3)
+					<< " AND SEQUENCIAL = " << linhaSelo.substr(12, 6)
+					<< " AND DIGITO = '" << linhaSelo.substr(18, 4)
+					<< "' AND Status = 'C' " << "\n";
+		}
+	}
+
 	os.close();
 	// different member versions of find in the same order as above:
 	std::size_t found = str.find(str2);
