@@ -40,6 +40,7 @@ void leituraDeArquivoLinhaAlinha() {
 void leituraGravacaoSimples() {
 
 }
+
 int main() {
 	leituraGravacaoSimples();
 
@@ -66,14 +67,20 @@ int main() {
 			std::size_t poselo = line.find(tjdft);
 			if (poselo != std::string::npos) {
 				setOfSelos.insert(line.substr(poselo, line.npos));
-				// adicionar ao set para gravar arquivo de saida a partir do set sem repetição
 			}
 		}
 	}
 	is.close();
-	for (auto linhaSelo : setOfSelos) {
-		std::cout << linhaSelo << "\n";
-		if (os.is_open()) {
+	std::cout << "Número de registro no conjunto setOfSelos " << setOfSelos.size() << "\n";
+	if (os.is_open()) {
+		for (auto linhaSelo : setOfSelos) {
+			std::cout
+					<< "update [SIEX].[siex].[SeloDigital] set Status = 'G' where ANO = "
+					<< linhaSelo.substr(5, 4) << "\n"
+					<< " AND CartorioExtrajudicial = " << linhaSelo.substr(9, 3)
+					<< " AND SEQUENCIAL = " << linhaSelo.substr(12, 6)
+					<< " AND DIGITO = '" << linhaSelo.substr(18, 4)
+					<< "' AND Status = 'C' " << "\n";
 			os
 					<< "update [SIEX].[siex].[SeloDigital] set Status = 'G' where ANO = "
 					<< linhaSelo.substr(5, 4) << "\n"
@@ -105,7 +112,8 @@ int main() {
 	// let's replace the first needle:
 	str.replace(str.find(str2), str2.length(), "preposition");
 	std::cout << str << '\n';
-	for (std::string line; std::getline(is, line);) {
+
+	/*for (std::string line; std::getline(is, line);) {
 		std::cout << line << '\n';
 		std::size_t poselo = line.find(tjdft);
 		if (poselo != std::string::npos)
@@ -130,6 +138,6 @@ int main() {
 		if (istrm >> n >> s)                               // text input
 			std::cout << "read back from file: " << d << ' ' << n << ' ' << s
 					<< '\n';
-	}
+	}*/
 }
 
