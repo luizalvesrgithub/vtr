@@ -8,7 +8,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
 #include <sstream>
 
 void leituraDeArquivoLinhaAlinha() {
@@ -41,7 +40,6 @@ void leituraGravacaoSimples() {
 int main() {
 	leituraGravacaoSimples();
 
-
 	std::string str("There are two needles in this haystack with needles.");
 	std::string str2("needle");
 	std::string tjdft("TJDFT");
@@ -51,23 +49,27 @@ int main() {
 	std::string nomeArquivo;
 	std::cout << "Informe o nome do arquivo a ser tratado:  ";
 	std::getline(std::cin, nomeArquivo);
-	/*std::ofstream os(nomeArquivo, std::ofstream::out);
-	if(os.is_open()){
+	std::ofstream os("saidaDe_" + nomeArquivo, std::ofstream::out);
+	if (os.is_open()) {
 		os << "Primeira linha ";
-		os.close();
-	}*/
+	}
 	std::ifstream is(nomeArquivo, std::ifstream::in);
 	if (is.is_open()) {
 		std::cout << "Arquivo " << nomeArquivo << " Aberto" << '\n';
 		for (std::string line; std::getline(is, line);) {
 			std::cout << line << '\n';
 			std::size_t poselo = line.find(tjdft);
-			if (poselo != std::string::npos)
+			if (poselo != std::string::npos) {
 				std::cout << "first 'TJDFT' found at: " << poselo << '\n';
+				// adicionar ao set para gravar arquivo de saida a partir do set sem repetição
+				os  << "update [SIEX].[siex].[SeloDigital] set Status = 'G' where ANO = "
+					<< line.substr(poselo, 4) << "\n";
+			}
 
 		}
 	}
-    is.close();
+	is.close();
+	os.close();
 	// different member versions of find in the same order as above:
 	std::size_t found = str.find(str2);
 	if (found != std::string::npos)
