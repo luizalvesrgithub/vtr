@@ -42,6 +42,9 @@ void leituraGravacaoSimples() {
 }
 
 int main() {
+
+	std::vector<std::string> vselos;
+
 	leituraGravacaoSimples();
 
 	std::set<std::string> setOfSelos;
@@ -49,6 +52,7 @@ int main() {
 	std::set<std::string>::iterator it;
 	std::pair<std::set<std::string>::iterator, bool> ret;
 	std::string tjdft("TJDFT");
+	std::string delimitador;
 	std::string refselo("<referenteSelo>");
 
 	//leituraDeArquivoLinhaAlinha();
@@ -56,23 +60,34 @@ int main() {
 	std::string nomeArquivo;
 	std::cout << "Informe o nome do arquivo a ser tratado:  ";
 	std::getline(std::cin, nomeArquivo);
+
+	std::cout << "Informe o delimitador:  ";
+	std::getline(std::cin, delimitador);
+
 	std::ofstream os("saidaDe_" + nomeArquivo, std::ofstream::out);
 
 	std::ifstream is(nomeArquivo, std::ifstream::in);
 	if (is.is_open()) {
 		std::cout << "Arquivo " << nomeArquivo << " Aberto" << '\n';
 		for (std::string line; std::getline(is, line);) {
-			std::size_t poselo = line.find(tjdft);
+			std::size_t poselo = line.find(delimitador);
 			std::size_t pref = line.find(refselo);
 			if (poselo != std::string::npos) {
-				if (pref == std::string::npos)
+				if (pref == std::string::npos) {
 					setOfSelos.insert(line.substr(poselo, line.npos));
+					vselos.push_back(line.substr(poselo, line.npos));
+				}
 			}
 		}
 	}
 	is.close();
 	std::cout << "Número de registro no conjunto setOfSelos "
 			<< setOfSelos.size() << "\n";
+
+	for (const auto &valor : vselos) {
+		std::cout << valor << std::endl; // print each element
+	}
+
 	if (os.is_open()) {
 		for (auto linhaSelo : setOfSelos) {
 			/*std::cout
